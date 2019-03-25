@@ -4,7 +4,13 @@ import LogoComponent from "./authLogo";
 import AuthForm from "./authForm";
 
 class AuthComponent extends Component {
-  state = { loading: false };
+  state = {
+    loading: false
+  };
+
+  goNext = () => {
+    this.props.navigation.navigate("App");
+  };
   render() {
     if (this.state.loading) {
       return (
@@ -17,7 +23,7 @@ class AuthComponent extends Component {
         <ScrollView style={styles.container}>
           <View>
             <LogoComponent />
-            <AuthForm />
+            <AuthForm goNext={this.goNext} />
           </View>
         </ScrollView>
       );
