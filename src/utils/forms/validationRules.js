@@ -9,11 +9,26 @@ const ValidationRules = (value, rules, form) => {
       case "isEmail":
         valid = valid && validateEmail(value);
         break;
+      case "minLength":
+        valid = valid && validateMinLength(value, rules[rule]);
+        break;
+      case "maxLength":
+        valid = valid && validateMaxLenght(value, rules[rule]);
+        break;
+      case "confirmPass":
+        valid =
+          valid &&
+          validateconfirmPassword(value, form[rules.confirmPass].value);
+        break;
       default:
         valid = true;
     }
   }
   return valid;
+};
+
+const validateconfirmPassword = (confirmPass, pass) => {
+  return confirmPass === pass;
 };
 
 const validateEmail = email => {
@@ -27,4 +42,17 @@ const validateRequired = value => {
   return false;
 };
 
+const validateMinLength = (value, ruleValue) => {
+  if (value.length >= ruleValue) {
+    return true;
+  }
+  return false;
+};
+
+const validateMaxLenght = (value, ruleValue) => {
+  if (value.length <= ruleValue) {
+    return true;
+  }
+  return false;
+};
 export default ValidationRules;
