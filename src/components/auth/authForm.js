@@ -38,7 +38,31 @@ class AuthForm extends Component {
       }
     }
   };
-  submitUser = () => {};
+  submitUser = () => {
+    let isFormValid = true;
+    let formToSubmit = {};
+    const formCopy = this.state.form;
+    for (let key in formCopy) {
+      if (this.state.type === "Login") {
+        if (key !== "confirmPassword") {
+          isFormValid = isFormValid && formCopy[key].valid;
+          formToSubmit[key] = formCopy[key].value;
+        }
+      } else {
+        isFormValid = isFormValid && formCopy[key].valid;
+        formToSubmit[key] = formCopy[key].value;
+      }
+      if (isFormValid) {
+        if (this.state.type === "Login") {
+        } else {
+        }
+      } else {
+        this.setState({
+          hasErrors: true
+        });
+      }
+    }
+  };
   changeFormType = () => {
     const type = this.state.type;
     this.setState({
@@ -55,7 +79,6 @@ class AuthForm extends Component {
 
     let rules = formCopy[name].rules;
     let valid = ValidationRules(value, rules, formCopy);
-    console.log(valid);
 
     formCopy[name].valid = valid;
 
