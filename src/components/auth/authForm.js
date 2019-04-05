@@ -2,6 +2,9 @@ import React, { Component } from "react";
 import { Text, View, StyleSheet, Button, Platform } from "react-native";
 import Input from "../../utils/forms/input";
 import ValidationRules from "../../utils/forms/validationRules";
+import { connect } from "react-redux";
+import { signUp, signIn } from "../../store/actions/user_actions.js";
+import { bindActionCreators } from "redux";
 
 class AuthForm extends Component {
   state = {
@@ -52,15 +55,17 @@ class AuthForm extends Component {
         isFormValid = isFormValid && formCopy[key].valid;
         formToSubmit[key] = formCopy[key].value;
       }
-      if (isFormValid) {
-        if (this.state.type === "Login") {
-        } else {
-        }
+    }
+    if (isFormValid) {
+      if (this.state.type === "Login") {
+        this.props.signIn(formToSubmit);
       } else {
-        this.setState({
-          hasErrors: true
-        });
+        this.props.signUp(formToSubmit);
       }
+    } else {
+      this.setState({
+        hasErrors: true
+      });
     }
   };
   changeFormType = () => {
@@ -79,7 +84,7 @@ class AuthForm extends Component {
 
     let rules = formCopy[name].rules;
     let valid = ValidationRules(value, rules, formCopy);
-
+    console.log(valid);
     formCopy[name].valid = valid;
 
     this.setState({ form: formCopy });
@@ -141,7 +146,6 @@ class AuthForm extends Component {
     );
   }
 }
-export default AuthForm;
 
 const styles = StyleSheet.create({
   errorcontainer: {
@@ -167,3 +171,18 @@ const styles = StyleSheet.create({
     })
   }
 });
+
+function mapStateToProps(state) {
+  console.log(state);
+  return {
+    User: state.User
+  };
+}
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators({ signIn, signUp }, dispatch);
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(AuthForm);
