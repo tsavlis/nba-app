@@ -84,7 +84,6 @@ class AuthForm extends Component {
 
     let rules = formCopy[name].rules;
     let valid = ValidationRules(value, rules, formCopy);
-    console.log(valid);
     formCopy[name].valid = valid;
 
     this.setState({ form: formCopy });
