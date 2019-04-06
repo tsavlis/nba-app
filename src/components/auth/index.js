@@ -2,15 +2,40 @@ import React, { Component } from "react";
 import { View, StyleSheet, ScrollView, ActivityIndicator } from "react-native";
 import LogoComponent from "./authLogo";
 import AuthForm from "./authForm";
+import { getTokens, setTokens } from "../../utils/misc";
+
+import { connect } from "react-redux";
+import { autoSignIn } from "../../store/actions/user_actions.js";
+import { bindActionCreators } from "redux";
 
 class AuthComponent extends Component {
   state = {
-    loading: false
+    loading: true
   };
 
   goNext = () => {
     this.props.navigation.navigate("App");
   };
+
+  componentDidMount() {
+    getTokens(value => {
+      if (value[0][1] === null) {
+        console.log("as");
+        this.setState({ loading: false });
+      } else {
+        this.props.autoSignIn(value[1][1]).then(() => {
+          if (!this.props.User.auth.token) {
+            this.setState({ loading: false });
+          } else {
+            setTokens(this.props.User.auth, () => {
+              this.goNext();
+            });
+          }
+        });
+      }
+    });
+  }
+
   render() {
     if (this.state.loading) {
       return (
@@ -31,7 +56,21 @@ class AuthComponent extends Component {
   }
 }
 
-export default AuthComponent;
+function mapStateToProps(state) {
+  // console.log(state);
+  return {
+    User: state.User
+  };
+}
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators({ autoSignIn }, dispatch);
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(AuthComponent);
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,

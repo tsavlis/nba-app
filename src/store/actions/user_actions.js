@@ -1,5 +1,5 @@
 import axios from "axios";
-import { SIGN_IN, SIGN_UP } from "../types";
+import { SIGN_IN, SIGN_UP, AUTO_SIGN_IN } from "../types";
 import { SIGNIN, SIGNUP, FIREBASEURL, REFRESH } from "../../utils/misc";
 
 export function signUp(data) {
@@ -19,6 +19,8 @@ export function signUp(data) {
       return response.data;
     })
     .catch(error => {
+      console.log(error);
+
       return false;
     });
   return {
@@ -51,3 +53,25 @@ export function signIn(data) {
     payload: request
   };
 }
+
+export const autoSignIn = refToken => {
+  const request = axios({
+    method: "POST",
+    url: REFRESH,
+    data: "grant_type=refresh_token&refresh_token=" + refToken,
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded"
+    }
+  })
+    .then(response => {
+      return response.data;
+    })
+    .catch(error => {
+      console.log(error);
+      return false;
+    });
+  return {
+    type: AUTO_SIGN_IN,
+    payload: request
+  };
+};

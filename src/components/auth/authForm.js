@@ -1,14 +1,23 @@
 import React, { Component } from "react";
-import { Text, View, StyleSheet, Button, Platform } from "react-native";
+import {
+  Text,
+  View,
+  StyleSheet,
+  Button,
+  Platform,
+  ActivityIndicator
+} from "react-native";
 import Input from "../../utils/forms/input";
 import ValidationRules from "../../utils/forms/validationRules";
 import { connect } from "react-redux";
 import { signUp, signIn } from "../../store/actions/user_actions.js";
 import { bindActionCreators } from "redux";
+import { setTokens } from "../../utils/misc";
 
 class AuthForm extends Component {
   state = {
     type: "Login",
+    loading: false,
     action: "Login",
     actionMode: "I want to register",
     hasErrors: false,
@@ -41,7 +50,20 @@ class AuthForm extends Component {
       }
     }
   };
+
+  manageAccess = () => {
+    if (!this.props.User.auth.uid) {
+      this.setState({ hasErrors: true, loading: false });
+    } else {
+      setTokens(this.props.User.auth, () => {
+        this.setState({ hasErrors: false, loading: false });
+
+        this.props.goNext();
+      });
+    }
+  };
   submitUser = () => {
+    this.setState({ loading: true });
     let isFormValid = true;
     let formToSubmit = {};
     const formCopy = this.state.form;
@@ -58,13 +80,16 @@ class AuthForm extends Component {
     }
     if (isFormValid) {
       if (this.state.type === "Login") {
-        this.props.signIn(formToSubmit);
+        this.props.signIn(formToSubmit).then(() => {
+          this.manageAccess();
+        });
       } else {
         this.props.signUp(formToSubmit);
       }
     } else {
       this.setState({
-        hasErrors: true
+        hasErrors: true,
+        loading: false
       });
     }
   };
@@ -109,40 +134,51 @@ class AuthForm extends Component {
       </View>
     ) : null;
   render() {
-    return (
-      <View>
-        <Input
-          placeholder="Enter Email"
-          placeholderTextColor="#cecece"
-          autoCapitalize={"none"}
-          type={this.state.form.email.type}
-          value={this.state.form.email.value}
-          onChangeText={value => this.updateInput("email", value)}
-          keyboardType={"email-address"}
-          //overrideStyle={styles.}
-        />
-        <Input
-          placeholder="Enter Your Password"
-          placeholderTextColor="#cecece"
-          type={this.state.form.password.type}
-          value={this.state.form.password.value}
-          secureTextEntry
-          onChangeText={value => this.updateInput("password", value)}
-          //overrideStyle={styles.}
-        />
-        {this.confirmPassword()}
-        {this.formhasErrors()}
-        <View style={styles.button}>
-          <Button title={this.state.action} onPress={this.submitUser} />
+    if (this.state.loading) {
+      return (
+        <View style={styles.loading}>
+          <ActivityIndicator size="large" />
         </View>
-        <View style={styles.button}>
-          <Button title={this.state.actionMode} onPress={this.changeFormType} />
+      );
+    } else {
+      return (
+        <View>
+          <Input
+            placeholder="Enter Email"
+            placeholderTextColor="#cecece"
+            autoCapitalize={"none"}
+            type={this.state.form.email.type}
+            value={this.state.form.email.value}
+            onChangeText={value => this.updateInput("email", value)}
+            keyboardType={"email-address"}
+            //overrideStyle={styles.}
+          />
+          <Input
+            placeholder="Enter Your Password"
+            placeholderTextColor="#cecece"
+            type={this.state.form.password.type}
+            value={this.state.form.password.value}
+            secureTextEntry
+            onChangeText={value => this.updateInput("password", value)}
+            //overrideStyle={styles.}
+          />
+          {this.confirmPassword()}
+          {this.formhasErrors()}
+          <View style={styles.button}>
+            <Button title={this.state.action} onPress={this.submitUser} />
+          </View>
+          <View style={styles.button}>
+            <Button
+              title={this.state.actionMode}
+              onPress={this.changeFormType}
+            />
+          </View>
+          <View style={styles.button}>
+            <Button title="Do it later" onPress={() => this.props.goNext()} />
+          </View>
         </View>
-        <View style={styles.button}>
-          <Button title="Do it later" onPress={() => this.props.goNext()} />
-        </View>
-      </View>
-    );
+      );
+    }
   }
 }
 
