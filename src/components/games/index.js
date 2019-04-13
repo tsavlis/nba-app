@@ -1,11 +1,21 @@
 import React, { Component } from "react";
 import { Text, View, StyleSheet } from "react-native";
+import { SearchBar, CheckBox } from "react-native-elements";
 
 class Games extends Component {
+  state = {
+    checked: true
+  };
   render() {
     return (
       <View>
-        <Text> Games </Text>
+        <Text> {this.props.georgia} </Text>
+        <SearchBar
+          placeholder="Type Here..."
+          onChangeText={() => console.warn("sa")}
+          value={"as"}
+        />
+        <CheckBox title="Click Here" checked={this.state.checked} />
       </View>
     );
   }

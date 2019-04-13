@@ -11,6 +11,7 @@ import Article from "./components/news/article";
 import GameArticle from "./components/games/article";
 import LogoTitle from "./utils/forms/logo";
 import Games from "./components/games";
+import Ionicons from "react-native-vector-icons/Ionicons";
 
 const headerConf = {
   headerLayoutPreset: "center",
@@ -44,14 +45,28 @@ const AppStack = createBottomTabNavigator(
   },
   {
     tabBarOptions: {
-      activeBackgroundColor: "#00194b",
       activeTintColor: "#fff",
       showLabel: false,
+      activeBackgroundColor: "#00194b",
       inactiveBackgroundColor: "#001338",
       style: {
         backgroundColor: "#001338"
       }
-    }
+    },
+    initialRouteName: "News",
+    defaultNavigationOptions: ({ navigation }) => ({
+      tabBarIcon: (focused, horizontal, tintColor) => {
+        const { routeName } = navigation.state;
+        let iconName;
+        if (routeName === "News") {
+          iconName = `ios-basketball`;
+        } else if (routeName === "Games") {
+          iconName = `md-tv`;
+        }
+
+        return <Ionicons name={iconName} size={25} color={"#fff"} />;
+      }
+    })
   }
 );
 
