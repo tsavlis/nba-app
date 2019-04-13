@@ -86,6 +86,7 @@ const styles = StyleSheet.create({
   },
   textCard: {
     color: "#232323",
+    fontFamily: "OpenSans-Bold",
     fontSize: 16,
     padding: 10
   },
