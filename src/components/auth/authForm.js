@@ -84,7 +84,9 @@ class AuthForm extends Component {
           this.manageAccess();
         });
       } else {
-        this.props.signUp(formToSubmit);
+        this.props.signUp(formToSubmit).then(() => {
+          this.manageAccess();
+        });
       }
     } else {
       this.setState({
