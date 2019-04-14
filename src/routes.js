@@ -20,7 +20,7 @@ const headerConf = {
       backgroundColor: "#001338"
     },
     headerTintColor: "white"
-    // headerTitle: LogoTitle
+    //headerTitle: LogoTitle
   }
 };
 const NewsStack = createStackNavigator(
