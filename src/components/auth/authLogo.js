@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { View, Image } from "react-native";
-import nbalogo from "../../assets/images/nba.png";
+import nbalogo from "../../assets/images/crpto.png";
 
 const LogoComponent = () => (
   <View style={{ alignItems: "center" }}>

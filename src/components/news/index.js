@@ -54,13 +54,13 @@ class News extends Component {
                 {item.price_change_percentage_24h.toFixed(2) > 0 ? (
                   <Ionicons
                     name={`md-arrow-dropup`}
-                    size={18}
+                    size={22}
                     color={"green"}
                   />
                 ) : (
                   <Ionicons
                     name={`md-arrow-dropdown`}
-                    size={18}
+                    size={22}
                     color={"red"}
                   />
                 )}

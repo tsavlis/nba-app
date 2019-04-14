@@ -19,8 +19,8 @@ const headerConf = {
     headerStyle: {
       backgroundColor: "#001338"
     },
-    headerTintColor: "white",
-    headerTitle: LogoTitle
+    headerTintColor: "white"
+    // headerTitle: LogoTitle
   }
 };
 const NewsStack = createStackNavigator(
@@ -59,7 +59,7 @@ const AppStack = createBottomTabNavigator(
         const { routeName } = navigation.state;
         let iconName;
         if (routeName === "News") {
-          iconName = `ios-basketball`;
+          iconName = `logo-bitcoin`;
         } else if (routeName === "Games") {
           iconName = `md-tv`;
         }
