@@ -11,11 +11,21 @@ import {
 import { connect } from "react-redux";
 import { getNews } from "../../store/actions/news_action";
 import Moment from "moment";
+import Ionicons from "react-native-vector-icons/Ionicons";
 
 class News extends Component {
   componentDidMount() {
     this.props.dispatch(getNews());
   }
+
+  renderprice = date => {
+    let str = date.replace("-", "");
+    if (date > 0) {
+      return <Text style={{ color: "green" }}>{str}%</Text>;
+    } else {
+      return <Text style={{ color: "red" }}>{str}%</Text>;
+    }
+  };
 
   renderArticle = news =>
     news.articles ? (
@@ -33,15 +43,42 @@ class News extends Component {
               <Image
                 style={{ height: 150, justifyContent: "space-around" }}
                 source={{ uri: `${item.image}` }}
-                resizeMode="cover"
+                resizeMode="contain"
               />
             </View>
             <View style={styles.contentCard}>
-              <Text style={styles.textCard}>{item.title}</Text>
+              <Text style={styles.textCard}>
+                {item.name} at {item.current_price.toFixed(2)}$
+              </Text>
               <View style={styles.bottomCard}>
-                <Text style={styles.bottomCardTeam}>{item.team} -</Text>
+                {item.price_change_percentage_24h.toFixed(2) > 0 ? (
+                  <Ionicons
+                    name={`md-arrow-dropup`}
+                    size={18}
+                    color={"green"}
+                  />
+                ) : (
+                  <Ionicons
+                    name={`md-arrow-dropdown`}
+                    size={18}
+                    color={"red"}
+                  />
+                )}
                 <Text style={styles.Text}>
-                  Posted at {Moment(item.date).format("d MMMM")}
+                  {this.renderprice(
+                    item.price_change_percentage_24h.toFixed(2)
+                  )}
+                </Text>
+                <Text
+                  style={{
+                    fontSize: 12,
+                    position: "absolute",
+                    right: 0,
+                    padding: 10
+                  }}
+                >
+                  Updated at
+                  {Moment(item.last_updated).format("DD MMMM")}
                 </Text>
               </View>
             </View>
@@ -103,6 +140,6 @@ const styles = StyleSheet.create({
   },
   Text: {
     color: "#828282",
-    fontSize: 12
+    fontSize: 16
   }
 });
