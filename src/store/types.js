@@ -5,3 +5,7 @@ export const AUTO_SIGN_IN = "AUTO_SIGN_IN";
 
 //news
 export const GET_NEWS = "GET_NEWS";
+
+//games
+
+export const GET_GAMES = "GET_GAMES";

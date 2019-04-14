@@ -30,3 +30,21 @@ export const getTokens = cb => {
     cb(value);
   });
 };
+
+export const convertFIrebase = data => {
+  const newData = [];
+  for (let key in data) {
+    newData.push({
+      ...data[key],
+      id: key
+    });
+  }
+  return newData;
+};
+
+export const findTeamData = (Id, teams) => {
+  const value = teams.find(team => {
+    return team.id === Id;
+  });
+  return value;
+};
